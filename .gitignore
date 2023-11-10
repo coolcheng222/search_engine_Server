@@ -1,4 +1,3 @@
-./src/img2img_demo/img/*
-src/preprocessor/info/data_1000.h5
-src/preprocessor/info/features.h5
-*/__pycache__/*
+src/img2img_demo/img/
+src/preprocessor/info/
+src/preprocessor/__pycache__
