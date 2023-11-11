@@ -50,5 +50,5 @@ def featureExtration(from_start = True):
         count += 1
     dataManager.save_end()
     print("feature over: " + str(dataManager.len()))
-# batchData(True) # here is the process that save path batches to the images(info/data.h5)
-featureExtration(False)
+# batchData(from_start=True) # here is the process that save path batches to the images(info/data.h5)
+featureExtration(from_start=False)
