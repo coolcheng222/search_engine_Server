@@ -1,3 +1,6 @@
 src/img2img_demo/img/
 src/preprocessor/info/
 src/preprocessor/__pycache__
+src/preprocessor/checkpoint.pkl
+src/test
+src/preprocessor/checkpoint2.pkl

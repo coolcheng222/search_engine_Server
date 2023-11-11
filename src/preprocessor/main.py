@@ -4,9 +4,9 @@ from tqdm import tqdm
 from Image2Feature import BaseImage2Feature
 from AnnoyManager import BaseAnnoyManager
 import torch
-root_directory = 'D:\idmm\img_resized_1M\cities_instagram' 
+root_directory = r'D:\codes\dataengine\search_engine_Server\src\test' 
 batch_size = 1000
-feature_batch_size = 200
+feature_batch_size = 10
 
 img_h5_file = f'info/data_{batch_size}.h5'
 feature_h5 = 'info/features.h5'
@@ -31,20 +31,24 @@ def batchData(from_start = True):
     dataManager.save_end()
     print("batch over: " + str(dataManager.len()))
 def featureExtration(from_start = True):
+    checkpoint_filename = "checkpoint2.pkl"
     if from_start:
         checkpoint_file = None
     else:
-        checkpoint_file = "checkpoint2.pkl"
+        checkpoint_file = checkpoint_filename
     dataManager = HDF5DataManager(feature_h5)
     imageIterator = ImageIterator(root_directory, feature_batch_size, checkpoint_file)
     count = 1
     for batch_images in imageIterator:
+        if len(batch_images) == 0:
+            continue
         feature = img2fea.preprocess(root_directory,batch_images)
         feature = feature.cpu().detach()
         dataManager.save_start(feature,from_start)
+        imageIterator.save_checkpoint(checkpoint_filename)
         print("feature extracting: " + str(count))
         count += 1
     dataManager.save_end()
     print("feature over: " + str(dataManager.len()))
 # batchData(True) # here is the process that save path batches to the images(info/data.h5)
-featureExtration()
+featureExtration(False)

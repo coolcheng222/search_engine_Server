@@ -31,8 +31,8 @@ class ImageIterator:
             batch_images.append(image_path)
             self.current_image_idx += 1
         
-        if self.current_folder_idx < len(self.folders):
-            self.save_checkpoint("checkpoint.pkl")
+        # if self.current_folder_idx < len(self.folders):
+        #     self.save_checkpoint("checkpoint2.pkl")
         
         return batch_images
 
