@@ -4,3 +4,4 @@ src/preprocessor/__pycache__
 src/preprocessor/checkpoint.pkl
 src/test
 src/preprocessor/checkpoint2.pkl
+src/preprocessor/data/tree.ann

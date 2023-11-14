@@ -1,16 +1,16 @@
 from annoy import AnnoyIndex
 import random
 class BaseAnnoyManager:
-    def __init__(self, dim):
+    def __init__(self ,dim):
         self.index = AnnoyIndex(dim, metric='angular')
         self.current_index = 0
 
     def add_vectors(self, vectors):
         for vector in vectors:
-            self.index.add_item(self.current_index, vector.numpy())
+            self.index.add_item(self.current_index, vector)
             self.current_index += 1
 
-    def build_index(self, n_trees=10):
+    def build_index(self, n_trees=100):
         self.index.build(n_trees)
 
     def find_nearest_neighbors(self, query_vector, k=1):
@@ -21,3 +21,5 @@ class BaseAnnoyManager:
 
     def load_index(self, filename):
         self.index.load(filename)
+    def len(self):
+        self.index.get_n_items()

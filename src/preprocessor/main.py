@@ -4,15 +4,18 @@ from tqdm import tqdm
 from Image2Feature import BaseImage2Feature
 from AnnoyManager import BaseAnnoyManager
 import torch
-root_directory = r'D:\codes\dataengine\search_engine_Server\src\test' 
+root_directory = r'D:\idmm\img_resized_1M\cities_instagram'
 batch_size = 1000
-feature_batch_size = 10
+feature_batch_size = 100
 
 img_h5_file = f'info/data_{batch_size}.h5'
 feature_h5 = 'info/features.h5'
+annoy_file = 'data/tree.ann'
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 img2fea = BaseImage2Feature(device)
+annoyManager = BaseAnnoyManager(dim = 2048)
+
 
 def batchData(from_start = True):
     # if from_start == False, the process may continue from checkpoint automatically
@@ -38,7 +41,12 @@ def featureExtration(from_start = True):
         checkpoint_file = checkpoint_filename
     dataManager = HDF5DataManager(feature_h5)
     imageIterator = ImageIterator(root_directory, feature_batch_size, checkpoint_file)
-    count = 1
+    if not from_start:
+        count = imageIterator.current_folder_idx * 100000 + imageIterator.current_image_idx
+        count = count // 100
+        print(f"{imageIterator.current_image_idx},{imageIterator.current_folder_idx}")
+    else:
+        count = 0
     for batch_images in imageIterator:
         if len(batch_images) == 0:
             continue
@@ -50,5 +58,16 @@ def featureExtration(from_start = True):
         count += 1
     dataManager.save_end()
     print("feature over: " + str(dataManager.len()))
+def putIntoAnnoy():
+    dataManager = HDF5DataManager(feature_h5)
+    number = dataManager.len()
+    for i in tqdm(range(number)):
+        a = dataManager.get(i)[:]
+        # print(type(a))
+        annoyManager.add_vectors(a)
+    annoyManager.build_index()
+    annoyManager.save_index(annoy_file)
+    print(annoyManager.len())
 # batchData(from_start=True) # here is the process that save path batches to the images(info/data.h5)
-featureExtration(from_start=False)
+# featureExtration(from_start=False)
+putIntoAnnoy()
