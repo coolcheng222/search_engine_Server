@@ -4,7 +4,7 @@ from tqdm import tqdm
 from Image2Feature import BaseImage2Feature
 from AnnoyManager import BaseAnnoyManager
 import torch
-root_directory = r'D:\idmm\img_resized_1M\cities_instagram'
+root_directory = r'G:\idmm\img_resized_1M\cities_instagram'
 batch_size = 1000
 feature_batch_size = 100
 

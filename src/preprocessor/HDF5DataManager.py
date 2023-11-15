@@ -31,7 +31,7 @@ class HDF5DataManager():
         res = []
         for index in indices:
             # 获取对应索引的数据
-            item = self.file['batch_' + str(index // self.batch_size)][index % self.batch_size]
+            item = self.file['batch_' + str(index // self.batch_size)][index % self.batch_size].decode().replace("\\","/")
             res.append(item)
         self.save_end()
         return res
