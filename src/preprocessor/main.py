@@ -4,7 +4,11 @@ from tqdm import tqdm
 from Image2Feature import BaseImage2Feature
 from AnnoyManager import BaseAnnoyManager
 import torch
-root_directory = r'G:\idmm\img_resized_1M\cities_instagram'
+import json
+with open("config.json","r") as f:
+    config = json.load(f)
+    root_directory = config["root_directory"]
+
 batch_size = 1000
 feature_batch_size = 100
 
