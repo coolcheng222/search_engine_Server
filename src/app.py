@@ -8,13 +8,17 @@ from preprocessor.AnnoyManager import BaseAnnoyManager
 from img2img_demo.search import Searcher
 from util import toCv2
 import torch
+import json
 # config here
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 batch_size = 1000
 dim = 2048
-h5_file = f'info/data_{batch_size}.h5'
-root_directory = r'D:\idmm\img_resized_1M\cities_instagram'
-ann_file = 'data/tree.ann'
+
+with open("config.json","r") as f:
+    config = json.load(f)
+    h5_file = config["h5_file"]
+    root_directory = config["root_directory"]
+    ann_file = config["ann_file"]
 
 fileManager = HDF5DataManager(h5_file,batch_size=batch_size)
 annoyManager = BaseAnnoyManager(dim)
@@ -23,6 +27,8 @@ img2fea = BaseImage2Feature(device)
 
 searcher = Searcher(img2fea,fileManager,annoyManager)
 searcher.init()
+
+# TODO: elaborate the api
 @app.route('/search', methods=['POST'])
 def hello():
     try:

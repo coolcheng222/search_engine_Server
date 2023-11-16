@@ -1,0 +1,5 @@
+{
+    "h5_file":"info/data_1000.h5",
+    "root_directory":"D:\\idmm\\img_resized_1M\\cities_instagram",
+    "ann_file":"data/tree.ann"
+}
