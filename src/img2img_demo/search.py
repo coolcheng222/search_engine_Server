@@ -1,27 +1,20 @@
-import torch
-import sys
-sys.path.append('src/preprocessor/')
-from HDF5DataManager import HDF5DataManager
-from Image2Feature import BaseImage2Feature
-from AnnoyManager import BaseAnnoyManager
+import numpy as np
+class Searcher:
+    def __init__(self,img2fea,fileManager,annoyManager):
+        self.img2fea = img2fea
+        self.fileManager = fileManager
+        self.annoyManager = annoyManager
+    def init(self):
+        self.search(np.random.randint(0, 256, size=(300,300,3), dtype=np.uint8))
+    def search(self,image,k = 10):
+        feature = self.img2fea.process(image)
 
-device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-batch_size = 1000
-dim = 2048
-h5_file = f'info/data_{batch_size}.h5'
-root_directory = r'D:\idmm\img_resized_1M\cities_instagram'
-ann_file = 'data/tree.ann'
+        feature = feature.cpu().detach().squeeze(0)
 
-fileManager = HDF5DataManager(h5_file,batch_size=batch_size)
-annoyManager = BaseAnnoyManager(dim)
-annoyManager.load_index('data/tree.ann')
-img2fea = BaseImage2Feature(device)
+        inc,dis = self.annoyManager.find_nearest_neighbors(feature,k)
+    
+        # print(inc,dis)
+        files = self.fileManager.search(inc)
 
-def search(image):
-    feature = img2fea.process(image)
-    feature = feature.cpu().detach().squeeze(0)
-    inc,dis = annoyManager.find_nearest_neighbors(feature,10)
-    # print(inc,dis)
-    files = fileManager.search(inc)
-    return files,dis
+        return files,dis
 
