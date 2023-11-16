@@ -22,7 +22,7 @@ annoyManager.load_index(ann_file)
 img2fea = BaseImage2Feature(device)
 
 searcher = Searcher(img2fea,fileManager,annoyManager)
-searcherearcher.init()
+searcher.init()
 @app.route('/search', methods=['POST'])
 def hello():
     try:
